@@ -27,6 +27,7 @@ const ENABLE_STATS = config.options.stats;
 const ENABLE_LINTING = config.options.linting;
 const ENABLE_SOURCE_MAPS = config.options.sourcemaps;
 const ENABLE_CACHING = isLocal ? config.options.caching : false;
+const EXTERNALS = config.options.externals;
 
 function convertListToObject(list) {
   var object = {};
@@ -214,7 +215,10 @@ module.exports = ignoreWarmupPlugin({
   stats: ENABLE_STATS ? "normal" : "errors-only",
   devtool: ENABLE_SOURCE_MAPS ? "source-map" : false,
   // Exclude "aws-sdk" since it's a built-in package
-  externals: ["aws-sdk", "knex", "sharp"],
+  externals:
+    EXTERNALS.length > 0
+      ? ["aws-sdk", "knex", "sharp"].concat(EXTERNALS)
+      : ["aws-sdk", "knex", "sharp"],
   mode: isLocal ? "development" : "production",
   performance: {
     // Turn off size warnings for entry points

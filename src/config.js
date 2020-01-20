@@ -14,6 +14,7 @@ module.exports = {
     sourcemaps: true,
     forceInclude: null,
     ignorePackages: [],
-    packagerOptions: {}
+    packagerOptions: {},
+    externals: []
   }
 };

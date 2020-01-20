@@ -17,6 +17,7 @@ const COPY_FILES = config.options.copyFiles;
 const ENABLE_LINTING = config.options.linting;
 const ENABLE_SOURCE_MAPS = config.options.sourcemaps;
 const ENABLE_CACHING = isLocal ? config.options.caching : false;
+const EXTERNALS = config.options.externals;
 
 function resolveEntriesPath(entries) {
   for (let key in entries) {
@@ -128,7 +129,7 @@ module.exports = ignoreWarmupPlugin({
   stats: ENABLE_STATS ? "normal" : "errors-only",
   devtool: ENABLE_SOURCE_MAPS ? "source-map" : false,
   // Exclude "aws-sdk" since it's a built-in package
-  externals: ["aws-sdk"],
+  externals: EXTERNALS.length > 0 ? ["aws-sdk"].concat(EXTERNALS) : ["aws-sdk"],
   mode: isLocal ? "development" : "production",
   performance: {
     // Turn off size warnings for entry points

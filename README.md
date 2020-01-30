@@ -1,5 +1,24 @@
 # serverless-bundle [![Build Status](https://travis-ci.com/AnomalyInnovations/serverless-bundle.svg?branch=master)](https://travis-ci.com/AnomalyInnovations/serverless-bundle) [![npm](https://img.shields.io/npm/v/serverless-bundle.svg)](https://www.npmjs.com/package/serverless-bundle)
 
+<hr/>
+
+## A note from Logixboard:
+
+This is our light fork of `serverless-bundle` which integrates features from two
+third-party forks. You can reproduce the state of this repo with:
+
+```sh
+git clone git@github.com/AnomalyInnovations/serverless-bundle
+git checkout 6c49ba4837cfe0151bf688981da1175401e57a93
+git remote add harryluo git@github.com:harryluo91/serverless-bundle
+git remote add receipthero git@github.com:receipthero/serverless-bundle
+git fetch harryluo; git fetch receipthero
+git merge --no-ff harryluo/master # this adds `exclude` support, useful for native modules. https://github.com/AnomalyInnovations/serverless-bundle/issues/50
+git merge --no-ff receipthero/typescript_support # self-explanatory. https://github.com/AnomalyInnovations/serverless-bundle/pull/51
+```
+
+<hr/>
+
 An extension of the [serverless-webpack](https://www.github.com/serverless-heaven/serverless-webpack) plugin. This plugin bundles your Node.js Lambda functions with sensible defaults so you **don't have to maintain your own Webpack configs**.
 
 - Linting via [ESLint](https://eslint.org)
@@ -81,11 +100,11 @@ custom:
 - ESLint
 
   This plugin uses [eslint-config-strongloop](https://github.com/strongloop/eslint-config-strongloop). You can [override this](https://eslint.org/docs/user-guide/configuring) by placing your own `.eslintrc.json` with the rules you'd like to use. If you'd like to ignore specific files, you can use a `.eslintignore` file.
-  
+
 - Customizing Babel and Webpack configs
 
   This plugin does not support customizing the Babel and Webpack configs, since [serverless-webpack](https://www.github.com/serverless-heaven/serverless-webpack) does a pretty good job with that. However, if you think the default config is missing some key features, feel free to open an issue about it.
-  
+
 #### Updating Options
 
 This plugin enables Webpack caching to speed up builds. Meaning that you'll need to clear the cache when you make a config change. So if you add an `.eslintignore` file, or change any other option; you'll need to do the following to see your changes take effect.

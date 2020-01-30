@@ -28,6 +28,7 @@ const ENABLE_LINTING = config.options.linting;
 const ENABLE_SOURCE_MAPS = config.options.sourcemaps;
 const ENABLE_CACHING = isLocal ? config.options.caching : false;
 const EXTERNALS = config.options.externals;
+const NOPARSE = config.options.noParse;
 
 function convertListToObject(list) {
   var object = {};
@@ -100,6 +101,11 @@ function tsLoader() {
 
 function loaders() {
   const loaders = {
+    noParse: NOPARSE
+      ? NOPARSE.map(function(x) {
+          return RegExp(x);
+        })
+      : [],
     rules: [
       {
         test: /\.js$/,

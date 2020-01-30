@@ -22,6 +22,7 @@ const ENABLE_LINTING = config.options.linting;
 const ENABLE_SOURCE_MAPS = config.options.sourcemaps;
 const ENABLE_CACHING = isLocal ? config.options.caching : false;
 const EXTERNALS = config.options.externals;
+const NOPARSE = config.options.noParse;
 
 function resolveEntriesPath(entries) {
   for (let key in entries) {
@@ -85,6 +86,7 @@ function tsLoader() {
 
 function loaders() {
   const loaders = {
+    noParse: NOPARSE ? NOPARSE.map(function(x) { return RegExp(x) }) : [],
     rules: [
       {
         test: /\.js$/,

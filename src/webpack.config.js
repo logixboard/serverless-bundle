@@ -8,9 +8,9 @@ const fs = require("fs");
 
 const config = require("./config");
 const jsEslintConfig = require("./eslintrc.json");
-const tsEslintConfig = require("./ts.eslintrc.json");
+//const tsEslintConfig = require("./ts.eslintrc.json");
 const ignoreWarmupPlugin = require("./ignore-warmup-plugin");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+//const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 const isLocal = slsw.lib.webpack.isLocal;
 
@@ -123,7 +123,7 @@ function loaders() {
   if (ENABLE_TYPESCRIPT) {
     loaders.rules.push({
       test: /\.ts$/,
-      use: [babelLoader(), tsLoader()],
+      use: [tsLoader()],
       exclude: [
         [
           path.resolve(servicePath, "node_modules"),
@@ -145,18 +145,21 @@ function plugins() {
   const plugins = [];
 
   if (ENABLE_TYPESCRIPT) {
-    const forkTsCheckerWebpackOptions = {
-      tsconfig: path.resolve(servicePath, "./tsconfig.json")
-    };
-
-    if (ENABLE_LINTING) {
-      forkTsCheckerWebpackOptions.eslint = true;
-      forkTsCheckerWebpackOptions.eslintOptions = {
-        baseConfig: tsEslintConfig
-      };
-    }
-
-    plugins.push(new ForkTsCheckerWebpackPlugin(forkTsCheckerWebpackOptions));
+    //const forkTsCheckerWebpackOptions = {
+    //  tsconfig: path.resolve(servicePath, "./tsconfig.json")
+    //};
+    //if (ENABLE_LINTING) {
+    //  forkTsCheckerWebpackOptions.eslint = true;
+    //  forkTsCheckerWebpackOptions.eslintOptions = {
+    //    baseConfig: tsEslintConfig
+    //  };
+    //}
+    // this plugin will very quickly run a system out of RAM (10-20GB usage was
+    // not uncommon on my desktop), so for now, disable it. this isn't
+    // entirely unheard of on this branch:
+    // https://github.com/AnomalyInnovations/serverless-bundle/issues/61#issuecomment-586687948
+    //
+    //plugins.push(new ForkTsCheckerWebpackPlugin(forkTsCheckerWebpackOptions));
   }
 
   if (ENABLE_CACHING) {

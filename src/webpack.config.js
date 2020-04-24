@@ -2,6 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const slsw = require("serverless-webpack");
 const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
+const WebpackSourceMapSupport = require("webpack-source-map-support");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ConcatTextPlugin = require("concat-text-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
@@ -173,6 +174,10 @@ function plugins() {
         }
       })
     );
+  }
+
+  if (ENABLE_SOURCE_MAPS) {
+    plugins.push(new WebpackSourceMapSupport());
   }
 
   if (copyFiles) {

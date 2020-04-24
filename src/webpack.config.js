@@ -108,11 +108,6 @@ function loaders() {
       : [],
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: [babelLoader()]
-      },
-      {
         test: /\.(graphql|gql)$/,
         exclude: /node_modules/,
         loader: "graphql-tag/loader"
@@ -122,7 +117,7 @@ function loaders() {
 
   if (ENABLE_TYPESCRIPT) {
     loaders.rules.push({
-      test: /\.ts$/,
+      test: /\.(ts|js)$/,
       use: [tsLoader()],
       exclude: [
         [
@@ -131,6 +126,12 @@ function loaders() {
           path.resolve(servicePath, ".webpack")
         ]
       ]
+    });
+  } else {
+    loaders.rules.push({
+      test: /\.js$/,
+      exclude: /node_modules/,
+      use: [babelLoader()]
     });
   }
 

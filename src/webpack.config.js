@@ -4,6 +4,7 @@ const slsw = require("serverless-webpack");
 const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ConcatTextPlugin = require("concat-text-webpack-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const fs = require("fs");
 
 const config = require("./config");
@@ -240,7 +241,13 @@ module.exports = ignoreWarmupPlugin({
     extensions: [".wasm", ".mjs", ".js", ".json", ".ts", ".graphql", ".gql"],
     // First start by looking for modules in the plugin's node_modules
     // before looking inside the project's node_modules.
-    modules: [path.resolve(__dirname, "node_modules"), "node_modules"]
+    modules: [path.resolve(__dirname, "node_modules"), "node_modules"],
+    // thanks https://blog.johnnyreilly.com/2018/08/killing-relative-paths-with-typescript-and.html
+    plugins: [
+      new TsconfigPathsPlugin({
+        /*configFile: "./path/to/tsconfig.json" */
+      })
+    ]
   },
   // Add loaders
   module: loaders(),

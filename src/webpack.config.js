@@ -17,7 +17,6 @@ const ignoreWarmupPlugin = require("./ignore-warmup-plugin");
 const isLocal = slsw.lib.webpack.isLocal;
 
 const servicePath = config.servicePath;
-const nodeVersion = config.nodeVersion;
 const copyFiles = config.options.copyFiles;
 const concatText = config.options.concatText;
 const ignorePackages = config.options.ignorePackages;
@@ -28,7 +27,7 @@ const ENABLE_TYPESCRIPT = fs.existsSync(tsConfigPath);
 const ENABLE_STATS = config.options.stats;
 const ENABLE_LINTING = config.options.linting;
 const ENABLE_SOURCE_MAPS = config.options.sourcemaps;
-const ENABLE_CACHING = isLocal ? config.options.caching : false;
+const ENABLE_CACHING = config.options.caching;
 const EXTERNALS = config.options.externals;
 const NOPARSE = config.options.noParse;
 
@@ -48,38 +47,6 @@ function resolveEntriesPath(entries) {
   }
 
   return entries;
-}
-
-function babelLoader() {
-  const plugins = [
-    "@babel/plugin-transform-runtime",
-    "@babel/plugin-proposal-class-properties"
-  ];
-
-  if (ENABLE_SOURCE_MAPS) {
-    plugins.push("babel-plugin-source-map-support");
-  }
-
-  return {
-    loader: "babel-loader",
-    options: {
-      // Enable caching
-      cacheDirectory: ENABLE_CACHING,
-      // Disable compresisng cache files to speed up caching
-      cacheCompression: false,
-      plugins: plugins.map(require.resolve),
-      presets: [
-        [
-          require.resolve("@babel/preset-env"),
-          {
-            targets: {
-              node: nodeVersion
-            }
-          }
-        ]
-      ]
-    }
-  };
 }
 
 function eslintLoader() {
@@ -130,10 +97,11 @@ function loaders() {
       ]
     });
   } else {
+    // this path is now untested. good luck, ye who enter here.
     loaders.rules.push({
       test: /\.js$/,
       exclude: /node_modules/,
-      use: [babelLoader()]
+      use: []
     });
   }
 
@@ -229,7 +197,7 @@ module.exports = ignoreWarmupPlugin({
   context: __dirname,
   // Disable verbose logs
   stats: ENABLE_STATS ? "normal" : "errors-only",
-  devtool: ENABLE_SOURCE_MAPS ? "source-map" : false,
+  devtool: ENABLE_SOURCE_MAPS ? "cheap-module-source-map" : false,
   // Exclude "aws-sdk" since it's a built-in package
   externals:
     EXTERNALS.length > 0
@@ -262,10 +230,9 @@ module.exports = ignoreWarmupPlugin({
         splitChunks: false,
         removeEmptyChunks: false,
         removeAvailableModules: false
-      }
-    : // Don't minimize in production
-      // Large builds can run out of memory
-      { minimize: false },
+      } // Don't minimize in production
+    : // Large builds can run out of memory
+      { minimize: false, splitChunks: false, removeAvailableModules: false },
   plugins: plugins(),
   node: {
     __dirname: false
